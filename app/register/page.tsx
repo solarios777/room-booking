@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useActionState } from 'react';
+import { useActionState, useEffect ,} from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import createUser from '@/app/actions/createUser';
+import {createUser} from '@/app/actions/createUser';
 import Link from 'next/link';
 
 interface FormState {   
@@ -13,16 +12,16 @@ interface FormState {
 }
 
 const RegisterPage = () => {
-  const [state, formAction] = useActionState<FormState>(createUser, {});
+  const [state, formAction] = useActionState<FormState, FormData>(createUser, {});
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (state.error) toast.error(state.error);
-  //   if (state.success) {
-  //     toast.success('You can now log in!');
-  //     router.push('/login');
-  //   }
-  // }, [state, router]);
+  useEffect(() => {
+    if (state.error) toast.error(state.error);
+    if (state.success) {
+      toast.success('You can now log in!');
+      router.push('/login');
+    }
+  }, [state, router]);
 
   return (
     <div className='flex items-center justify-center'>
