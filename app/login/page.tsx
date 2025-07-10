@@ -5,11 +5,19 @@ import { useEffect } from 'react';
 import { useActionState } from 'react';
 import { toast } from 'react-toastify';
 import createSession from '../actions/createSession';
-// import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/authContext';
+
+type AuthState = {
+  error?: string;
+  success?: boolean;
+};
 
 const LoginPage = () => {
-  const [state, formAction] = useActionState(createSession, {});
-  // const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [state, formAction] = useActionState<AuthState, FormData>(
+    createSession,
+    { error: undefined, success: undefined }
+  );
+  const {isAuthenticated, setIsAuthenticated} = useAuth();
 
   const router = useRouter();
 
@@ -19,6 +27,7 @@ const LoginPage = () => {
     }
     if (state?.success) {
       toast.success('Logged in successfully!');
+      setIsAuthenticated(true);
       router.push('/');
     }
   }, [state]);
@@ -26,7 +35,7 @@ const LoginPage = () => {
   return (
     <div className='flex items-center justify-center'>
       <div className='bg-white shadow-lg rounded-lg p-6 w-full max-w-sm mt-20'>
-        <form action={formAction}>
+        <form action={formAction}>  {/* This is the critical change */}
           <h2 className='text-2xl font-bold text-center text-gray-800 mb-6'>
             Login
           </h2>
@@ -60,7 +69,7 @@ const LoginPage = () => {
               id='password'
               name='password'
               className='border rounded w-full py-2 px-3'
-              autoComplete='password'
+              autoComplete='current-password'
               // required
             />
           </div>

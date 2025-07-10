@@ -6,18 +6,18 @@ import logo from '@/assets/images/logo.svg';
 import { FaUser, FaSignInAlt, FaSignOutAlt, FaBuilding } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import destroySession from '@/app/actions/destroySession';
-// import { useAuth } from '@/context/authContext';
+import { useAuth } from '@/context/authContext';
 
 const Header = () => {
   const router = useRouter();
+  const {isAuthenticated, setIsAuthenticated}= useAuth();
 
-  // const { isAuthenticated, setIsAuthenticated } = useAuth();
-
+ 
   const handleLogout = async () => {
     const { success, error } = await destroySession();
 
     if (success) {
-      // setIsAuthenticated(false);
+      setIsAuthenticated(false);
       router.push('/login');
     } else {
       toast.error(error);
@@ -46,8 +46,7 @@ const Header = () => {
                 >
                   Rooms
                 </Link>
-                {/* <!-- Logged In Only --> */}
-                {/* {isAuthenticated && ( */}
+                {isAuthenticated && (
                   <>
                     <Link
                       href='/bookings'
@@ -62,15 +61,14 @@ const Header = () => {
                       Add Room
                     </Link>
                   </>
-                {/* )} */}
+                )}
               </div>
             </div>
           </div>
           {/* <!-- Right Side Menu --> */}
           <div className='ml-auto'>
             <div className='ml-4 flex items-center md:ml-6'>
-              {/* <!-- Logged Out Only --> */}
-              {/* {!isAuthenticated && ( */}
+              {!isAuthenticated ? (
                 <>
                   <Link
                     href='/login'
@@ -85,11 +83,9 @@ const Header = () => {
                     <FaUser className='inline mr-1' /> Register
                   </Link>
                 </>
-              {/* )} */}
-
-              {/* {isAuthenticated && ( */}
+              ) : (
                 <>
-                  <Link href='/rooms/my'>
+                  <Link href='/rooms/my' className='mr-3 text-gray-800 hover:text-gray-600'>
                     <FaBuilding className='inline mr-1' /> My Rooms
                   </Link>
                   <button
@@ -99,7 +95,7 @@ const Header = () => {
                     <FaSignOutAlt className='inline mr-1' /> Sign Out
                   </button>
                 </>
-              {/* )} */}
+              )}
             </div>
           </div>
         </div>
@@ -114,8 +110,7 @@ const Header = () => {
           >
             Rooms
           </Link>
-          {/* <!-- Logged In Only --> */}
-          {/* {isAuthenticated && ( */}
+          {isAuthenticated && (
             <>
               <Link
                 href='/bookings'
@@ -130,7 +125,7 @@ const Header = () => {
                 Add Room
               </Link>
             </>
-          {/* )} */}
+          )}
         </div>
       </div>
     </header>

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import createUser from '@/app/actions/createUser';
 import Link from 'next/link';
 
-interface FormState { 
+interface FormState {   
   error?: string;
   success?: boolean;
 }
@@ -16,13 +16,13 @@ const RegisterPage = () => {
   const [state, formAction] = useActionState<FormState>(createUser, {});
   const router = useRouter();
 
-  useEffect(() => {
-    if (state.error) toast.error(state.error);
-    if (state.success) {
-      toast.success('You can now log in!');
-      router.push('/login');
-    }
-  }, [state, router]);
+  // useEffect(() => {
+  //   if (state.error) toast.error(state.error);
+  //   if (state.success) {
+  //     toast.success('You can now log in!');
+  //     router.push('/login');
+  //   }
+  // }, [state, router]);
 
   return (
     <div className='flex items-center justify-center'>

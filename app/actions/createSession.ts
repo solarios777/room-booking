@@ -1,23 +1,29 @@
+// createSession.ts
 'use server';
 import { createAdminClient } from '@/config/appwrite';
 import { cookies } from 'next/headers';
 
-async function createSession(previousState: any, formData: FormData) {
- 
-  
+type AuthState = {
+  error?: string;
+  success?: boolean;
+};
+
+async function createSession(
+  previousState: AuthState, 
+  formData: FormData
+): Promise<AuthState> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
+  
 
   if (!email || !password) {
-    return { error: 'Please fill out all fields' };
+    return { error: 'Please fill out all fields', success: false };
   }
 
-  const { account } = await createAdminClient();
-
   try {
+    const { account } = await createAdminClient();
     const session = await account.createEmailPasswordSession(email, password);
 
-    // Await the cookies() call
     (await cookies()).set('appwrite-session', session.secret, {
       httpOnly: true,
       secure: true,
@@ -26,10 +32,10 @@ async function createSession(previousState: any, formData: FormData) {
       path: '/',
     });
 
-    return { success: true };
+    return { success: true, error: undefined };
   } catch (error) {
     console.log('Authentication Error: ', error);
-    return { error: 'Invalid Credentials' };
+    return { error: 'Invalid Credentials', success: false };
   }
 }
 

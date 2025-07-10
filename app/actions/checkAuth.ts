@@ -3,13 +3,15 @@ import { createSessionClient } from '@/config/appwrite';
 import { cookies } from 'next/headers';
 
 async function checkAuth() {
-  const sessionCookie = cookies().get('appwrite-session');
+  // Add await if cookies() is async in your environment
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('appwrite-session');
 
   if (!sessionCookie) {
     return {
       isAuthenticated: false,
     };
-  }
+  } 
 
   try {
     const { account } = await createSessionClient(sessionCookie.value);
