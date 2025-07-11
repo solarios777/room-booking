@@ -20,6 +20,9 @@ interface Room {
 interface RoomPageProps {
   params: {
     id: string;
+    slug: string;
+    [key: string]: string | string[] | undefined;
+    
   };
   searchParams?: Record<string, string | string[] | undefined>;
 }
