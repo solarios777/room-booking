@@ -8,8 +8,14 @@ import checkAuth from './checkAuth';
 import { revalidatePath } from 'next/cache';
 import checkRoomAvailability from './checkRoomAvailability';
 
-async function bookRoom(previousState, formData) {
-  const sessionCookie = cookies().get('appwrite-session');
+interface BookingResult {
+  error?: string;
+  success?: boolean;
+}
+
+async function bookRoom(previousState: any, formData: FormData): Promise<BookingResult> {
+  const cookiesStore =await cookies();
+  const sessionCookie = cookiesStore.get('appwrite-session');
   if (!sessionCookie) {
     redirect('/login');
   }
@@ -27,11 +33,11 @@ async function bookRoom(previousState, formData) {
     }
 
     // Extract date and time from the formData
-    const checkInDate = formData.get('check_in_date');
-    const checkInTime = formData.get('check_in_time');
-    const checkOutDate = formData.get('check_out_date');
-    const checkOutTime = formData.get('check_out_time');
-    const roomId = formData.get('room_id');
+    const checkInDate = formData.get('check_in_date') as string;
+    const checkInTime = formData.get('check_in_time') as string;
+    const checkOutDate = formData.get('check_out_date') as string;
+    const checkOutTime = formData.get('check_out_time') as string;
+    const roomId = formData.get('room_id') as string;
 
     // Combine date and time to ISO 8601 format
     const checkInDateTime = `${checkInDate}T${checkInTime}`;
@@ -58,9 +64,9 @@ async function bookRoom(previousState, formData) {
     };
 
     // Create booking
-    const newBooking = await databases.createDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
-      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS,
+    await databases.createDocument(
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE as string,
+      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS as string,
       ID.unique(),
       bookingData
     );

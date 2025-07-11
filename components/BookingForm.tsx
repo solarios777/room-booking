@@ -1,37 +1,38 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-// import bookRoom from '@/app/actions/bookRoom';
+import bookRoom from '@/app/actions/bookRoom';
 
 interface Room {
   $id: string;
-  [key: string]: any; // Additional room properties if needed
+ 
 }
 
-interface FormState {
+interface BookingState {
   error?: string;
   success?: boolean;
 }
 
 const BookingForm = ({ room }: { room: Room }) => {
-  // const [state, formAction] = useFormState<FormState>(bookRoom, {});
+  const [state, formAction] = useActionState<BookingState, FormData>(bookRoom, {});
 
-  // const router = useRouter();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (state.error) toast.error(state.error);
-  //   if (state.success) {
-  //     toast.success('Room has been booked!');
-  //     router.push('/bookings');
-  //   }
-  // }, [state, router]);
+  useEffect(() => {
+    if (state.error) {
+      toast.error(state.error);
+    }
+    if (state.success) {
+      toast.success('Room has been booked!');
+      router.push('/bookings');
+    }
+  }, [state, router]);
 
   return (
     <div className='mt-6'>
       <h2 className='text-xl font-bold'>Book this Room</h2>
-      <form className='mt-4'>
+      <form action={formAction} className='mt-4'>
         <input type='hidden' name='room_id' value={room.$id} />
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
           <div>

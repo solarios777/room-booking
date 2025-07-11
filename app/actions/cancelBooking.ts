@@ -6,8 +6,9 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import checkAuth from './checkAuth';
 
-async function cancelBooking(bookingId) {
-  const sessionCookie = cookies().get('appwrite-session');
+async function cancelBooking(bookingId: string) {
+  const cookiesStore =await cookies();
+  const sessionCookie = cookiesStore.get('appwrite-session');
   if (!sessionCookie) {
     redirect('/login');
   }
@@ -26,8 +27,8 @@ async function cancelBooking(bookingId) {
 
     // Get the booking
     const booking = await databases.getDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
-      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS,
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE!,
+      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS!,
       bookingId
     );
 
@@ -40,8 +41,8 @@ async function cancelBooking(bookingId) {
 
     // Delete booking
     await databases.deleteDocument(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
-      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS,
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE!,
+      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS!,
       bookingId
     );
 
