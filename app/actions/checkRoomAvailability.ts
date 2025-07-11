@@ -7,17 +7,23 @@ import { redirect } from 'next/navigation';
 import { DateTime } from 'luxon';
 
 // Convert a date string to a Luxon DateTime object in UTC
-function toUTCDateTime(dateSring) {
+function toUTCDateTime(dateSring: string) {
   return DateTime.fromISO(dateSring, { zone: 'utc' }).toUTC();
 }
 
 // Check for overlapping date ranges
-function dateRangesOverlap(checkInA, checkOutA, checkInB, checkOutB) {
+function dateRangesOverlap(
+  checkInA: DateTime,
+  checkOutA: DateTime,
+  checkInB: DateTime,
+  checkOutB: DateTime
+) {
   return checkInA < checkOutB && checkOutA > checkInB;
 }
 
-async function checkRoomAvailability(roomId, checkIn, checkOut) {
-  const sessionCookie = cookies().get('appwrite-session');
+async function checkRoomAvailability(roomId: string, checkIn: string, checkOut: string) {
+  const cookiesStore =await cookies();
+  const sessionCookie = cookiesStore.get('appwrite-session');
   if (!sessionCookie) {
     redirect('/login');
   }
@@ -30,8 +36,8 @@ async function checkRoomAvailability(roomId, checkIn, checkOut) {
 
     // Fetch all bookings for a given room
     const { documents: bookings } = await databases.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
-      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS,
+      process.env.NEXT_PUBLIC_APPWRITE_DATABASE!,
+      process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_BOOKINGS!,
       [Query.equal('room_id', roomId)]
     );
 
