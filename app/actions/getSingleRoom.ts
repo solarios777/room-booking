@@ -3,7 +3,7 @@
 import { createAdminClient } from '@/config/appwrite';
 import { redirect } from 'next/navigation';
 
-async function getSingleRoom(id: string): Promise<any> {
+async function getSingleRoom(id: string) {
   try {
     const { databases } = await createAdminClient();
 

@@ -17,16 +17,12 @@ interface Room {
 }
 
 interface RoomPageProps {
-  params: {
-    id: string;
-  };
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
-  };
+  params:Promise<{id: string}> 
+  
 }
 
 const RoomPage = async ({ params }: RoomPageProps) => {
-  const { id } = params;
+  const { id } = await params;
   const room = await getSingleRoom(id);
 
   if (!room) {
