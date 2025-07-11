@@ -16,17 +16,16 @@ interface Room {
   image?: string;
 }
 
+// Simplified props interface
 interface RoomPageProps {
   params: {
     id: string;
   };
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
-  };
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 const RoomPage = async ({ params }: RoomPageProps) => {
-  const { id } = params; // Remove the await here - params is not a Promise
+  const { id } = params;
   const room = await getSingleRoom(id);
 
   if (!room) {
